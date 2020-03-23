@@ -566,7 +566,7 @@ npm run precommit
 ./run start
 ```
 
-open [http://localhost:9001/example/index.html](http://localhost:9001/example/index.html)
+open [http://localhost:8060/example/](http://localhost:8060/example/)
 
 ### Contributing
 
