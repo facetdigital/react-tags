@@ -31,7 +31,7 @@ const ENTER_ARROW_KEY_CODE = 13;
 const mockItem = (overrides) => {
   const props = Object.assign({}, defaults, overrides);
   return <ReactTags {...props} />;
-}
+};
 
 describe('Test ReactTags', () => {
   test('should render with expected props', () => {
@@ -555,7 +555,7 @@ describe('Test ReactTags', () => {
     });
     test('should add tag with custom label field and default suggestion filter', () => {
       const labelField = 'name';
-      const mapper = data => ({ id: data.id, name: data.text });
+      const mapper = (data) => ({ id: data.id, name: data.text });
       const tags = defaults.tags.map(mapper);
       const suggestions = defaults.suggestions.map(mapper);
 
@@ -579,7 +579,7 @@ describe('Test ReactTags', () => {
     });
     test('should select the correct suggestion using the keyboard when label is custom', () => {
       const labelField = 'name';
-      const mapper = data => ({ id: data.id, name: data.text });
+      const mapper = (data) => ({ id: data.id, name: data.text });
       const actual = [];
       const suggestions = defaults.suggestions.map(mapper);
 
@@ -610,7 +610,7 @@ describe('Test ReactTags', () => {
 
 test('should render default tags with custom label field', () => {
   const labelField = 'name';
-  const mapper = data => ({ id: data.id, name: data.text });
+  const mapper = (data) => ({ id: data.id, name: data.text });
   const tags = defaults.tags.map(mapper);
   const suggestions = defaults.suggestions.map(mapper);
 
@@ -700,8 +700,12 @@ describe('Test inputFieldPosition', () => {
       })
     );
 
-    expect(consoleWarnStub.calledOnce ).to.be.true;
-    expect(consoleWarnStub.calledWithExactly('[Deprecation] The inline attribute is deprecated and will be removed in v7.x.x, please use inputFieldPosition instead.')).to.be.true;
+    expect(consoleWarnStub.calledOnce).to.be.true;
+    expect(
+      consoleWarnStub.calledWithExactly(
+        '[Deprecation] The inline attribute is deprecated and will be removed in v7.x.x, please use inputFieldPosition instead.'
+      )
+    ).to.be.true;
 
     consoleWarnStub.restore();
   });

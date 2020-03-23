@@ -20,18 +20,14 @@ const tagPropValues = {
     tag: 'tag',
     remove: 'remove',
   },
-  index: 1
+  index: 1,
 };
 
-const mockItem = overrides => {
-  const props = Object.assign(
-    {},
-    tagPropValues,
-    overrides
-  );
+const mockItem = (overrides) => {
+  const props = Object.assign({}, tagPropValues, overrides);
   const TagContext = wrapInTestContext(Tag);
   return <TagContext name="TestTag" {...props} />;
-}
+};
 
 describe('Tag', () => {
   test('shows the classnames of children properly', () => {
@@ -60,13 +56,13 @@ describe('Tag', () => {
   });
 
   test('renders conditionaly passed in removed component correctly', () => {
-    const CustomConditionRemoveComponent = props => {
+    const CustomConditionRemoveComponent = (props) => {
       return props.tag.id === '1' ? null : <a className="removeTag">x</a>;
     };
     CustomConditionRemoveComponent.propTypes = {
       tag: PropTypes.shape({
-        id: PropTypes.string.isRequired
-      })
+        id: PropTypes.string.isRequired,
+      }),
     };
     const $el = mount(
       mockItem({ removeComponent: CustomConditionRemoveComponent })

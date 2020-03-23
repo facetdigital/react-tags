@@ -73,7 +73,7 @@ describe('Suggestions', () => {
       mockItem({
         minQueryLength: 2,
         query: 'ignore_query',
-        shouldRenderSuggestions: q => q !== 'ignore_query',
+        shouldRenderSuggestions: (q) => q !== 'ignore_query',
       })
     );
     expect($el.find('.foo').length).to.equal(0);
@@ -227,7 +227,10 @@ describe('Suggestions', () => {
   test('should trigger the click handler on touchStart', () => {
     const onTagClickedStub = stub();
     const $el = mount(mockItem({ handleClick: onTagClickedStub }));
-    $el.find('li').first().simulate('touchStart');
+    $el
+      .find('li')
+      .first()
+      .simulate('touchStart');
     expect(onTagClickedStub.calledOnce).to.be.true;
   });
 });
