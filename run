@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+
+#------------------------------------------------------------------------------
+# This script is a common utility for running various commands on this
+# repository in a development environment, including setup tasks for a new
+# development environment, and tasks that wrap docker and docker-compose to run
+# the service, its dependencies, and other management scripts inside containers.
+#
+# See the USAGE message below for commands.
+#------------------------------------------------------------------------------
+
+set -e
+
+############################################################
+# Config
+############################################################
+DOCKER_IMAGE_NAME="facet/react-tags"
+SERVER_CMD="npm run start"
+EXTERNAL_SERVER_PORT=8060
+INTERNAL_SERVER_PORT=3000
+
+DOCKER_BUILD_CMD="docker build . -t $DOCKER_IMAGE_NAME"
+DOCKER_RUN_CMD="docker run -it --rm -v $(pwd):/app"
+DOCKER_RUND_CMD="docker run --rm -v $(pwd):/app"
+
+############################################################
+# Usage
+############################################################
+if [[ $# -lt 1 ]]; then
+    echo
+    echo "USAGE: ./run.sh [COMMAND]"
+    echo
+    echo "Commands:"
+    echo "  setup - Setup the initial dev env by building the necessary"
+    echo "          Docker container."
+    echo
+    echo "  test - Run the unit tests."
+    echo
+    echo "  test:watch - Run all unit tests under watch mode, without coverage."
+    echo
+    echo "  lint - Run lint"
+    echo
+    echo "  lint-fix - Run lint and auto-fix as many issues as possible"
+    echo
+    echo "  build - Build the application for production"
+    echo
+    echo "  npm-check - Run an interactive GUI to check for npm packages that are out of date."
+    echo "              The GUI allows the user to select the packages they want to update and"
+    echo "              will then perform the update automatically."
+    echo
+    echo "  start - Run just the app server on http://localhost:$EXTERNAL_SERVER_PORT/"
+    echo
+    echo "  exec - Run a one-off command in a container."
+    echo
+    echo "  execd - Run a one-off command in a container, but non-interative, non-tty. (e.g., use with cron).."
+    echo
+    echo "  shell - Run a bash shell in a container."
+    echo
+    echo "######################################################################"
+    echo "NOTE: This script requires that you have Docker installed."
+    echo "######################################################################"
+    echo
+    exit
+fi
+
+
+############################################################
+# Main Script
+############################################################
+while [[ $# -gt 0 ]]; do
+    param="$1"
+    shift
+    case "$param" in
+        setup)
+            echo
+            echo "######################################################################"
+            echo "# Building '$DOCKER_IMAGE_NAME' Docker image..."
+            echo "######################################################################"
+            echo
+            $DOCKER_BUILD_CMD
+            rm -rf node_modules
+            $DOCKER_RUN_CMD $DOCKER_IMAGE_NAME npm install
+            break
+            ;;
+
+        test)
+            $DOCKER_RUN_CMD $DOCKER_IMAGE_NAME npm run test
+            break
+            ;;
+
+        test:watch)
+            $DOCKER_RUN_CMD $DOCKER_IMAGE_NAME npm run test:watch
+            break
+            ;;
+
+        lint)
+            $DOCKER_RUN_CMD $DOCKER_IMAGE_NAME npm run lint
+            break
+            ;;
+
+        lint-fix)
+            $DOCKER_RUN_CMD $DOCKER_IMAGE_NAME npm run lint:fix
+            break
+            ;;
+
+        build)
+            $DOCKER_RUN_CMD $DOCKER_IMAGE_NAME npm run build
+            break
+            ;;
+
+        npm-check)
+            $DOCKER_RUN_CMD $DOCKER_IMAGE_NAME npm run npm-check:update
+            break
+            ;;
+
+        start)
+            echo
+            echo "######################################################################"
+            echo "# Running app server on: http://localhost:$EXTERNAL_SERVER_PORT/"
+            echo "######################################################################"
+            echo
+            $DOCKER_RUN_CMD -p $EXTERNAL_SERVER_PORT:$INTERNAL_SERVER_PORT $DOCKER_IMAGE_NAME $SERVER_CMD
+            break
+            ;;
+
+        exec)
+            $DOCKER_RUN_CMD $DOCKER_IMAGE_NAME $@
+            break
+            ;;
+
+        execd)
+            $DOCKER_RUND_CMD $DOCKER_IMAGE_NAME $@
+            break
+            ;;
+
+        shell|bash)
+            $DOCKER_RUN_CMD $DOCKER_IMAGE_NAME bash
+            break
+            ;;
+
+        *)
+            echo "Unknown command: $param"
+            break
+            ;;
+    esac
+done
