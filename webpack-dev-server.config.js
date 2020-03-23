@@ -9,9 +9,30 @@ const config = {
   },
   // Server Configuration options
   devServer: {
+    compress: true,
     contentBase: './', // Relative directory for base of server
-    port: 8090, // Port Number
-    host: 'localhost', // Change to '0.0.0.0' for external facing server
+    disableHostCheck: true,
+    historyApiFallback: true,
+    host: '0.0.0.0',
+    hot: true,
+    https: false,
+    quiet: false,
+    overlay: {
+      warnings: true,
+      errors: true
+    },
+    port: 3000,
+    public: 'http://0.0.0.0:3000',
+    stats: {
+      // Stats documentation is here: https://webpack.js.org/configuration/stats/
+      colors: true
+    },
+    watchOptions: {
+      // if you're using Docker (or any VM, probably) you may need this
+      aggregateTimeout: 300,
+      poll: 1000,
+      ignored: /node_modules/
+    }
   },
   devtool: 'cheap-module-source-map',
   output: {
