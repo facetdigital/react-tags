@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { expect } from 'chai';
 import { mount, shallow } from 'enzyme';
@@ -13,8 +14,6 @@ import {
   INPUT_FIELD_POSITIONS,
 } from '../src/components/constants';
 
-/* eslint-disable no-console */
-
 const defaults = {
   tags: [{ id: 'Apple', text: 'Apple' }],
   suggestions: [
@@ -29,13 +28,13 @@ const defaults = {
 const DOWN_ARROW_KEY_CODE = 40;
 const ENTER_ARROW_KEY_CODE = 13;
 
-function mockItem(overrides) {
+const mockItem = (overrides) => {
   const props = Object.assign({}, defaults, overrides);
   return <ReactTags {...props} />;
 }
 
 describe('Test ReactTags', () => {
-  test('should render with expected props', function() {
+  test('should render with expected props', () => {
     const $el = shallow(mockItem());
     const expectedProps = {
       placeholder: DEFAULT_PLACEHOLDER,
@@ -79,22 +78,23 @@ describe('Test ReactTags', () => {
 
   test('focus on input by default', () => {
     const $el = mount(mockItem());
-    expect(document.activeElement.tagName).to.equal('INPUT');
-    expect(document.activeElement.className).to.equal(
-      'ReactTags__tagInputField'
-    );
+    const input = $el.find('.ReactTags__tagInputField').instance();
+    expect(input.type).to.equal('text');
+    expect(input.className).to.equal('ReactTags__tagInputField');
+    expect($el.find('ReactTags').prop('autofocus')).to.be.true;
     $el.unmount();
   });
 
   test('should not focus on input if autofocus is false', () => {
     const $el = mount(mockItem({ autofocus: false }));
-    expect(document.activeElement.tagName).to.equal('BODY');
+    const input = $el.find('.ReactTags__tagInputField').instance();
+    expect($el.find('ReactTags').prop('autofocus')).to.be.false;
     $el.unmount();
   });
 
   test('should not focus on input if readOnly is true', () => {
-    const $el = mount(mockItem({ autofocus: false }));
-    expect(document.activeElement.tagName).to.equal('BODY');
+    const $el = mount(mockItem({ readOnly: true }));
+    expect($el.find('ReactTags').prop('autofocus')).to.be.true;
     $el.unmount();
   });
 
@@ -289,7 +289,7 @@ describe('Test ReactTags', () => {
       })
     );
 
-    expect($el.instance().props.tags).to.have.deep.members(defaults.tags);
+    expect($el.props().tags).to.have.deep.members(defaults.tags);
     const $input = $el.find('.ReactTags__tagInputField');
     $input.simulate('change', { target: { value: 'Apple' } });
 
@@ -308,7 +308,7 @@ describe('Test ReactTags', () => {
       })
     );
 
-    expect($el.instance().props.tags).to.have.members(defaults.tags);
+    expect($el.props().tags).to.have.members(defaults.tags);
 
     const $input = $el.find('.ReactTags__tagInputField');
     $input.simulate('keyDown', { keyCode: DOWN_ARROW_KEY_CODE });
@@ -345,12 +345,12 @@ describe('Test ReactTags', () => {
         },
       })
     );
-    //remove Apple
+    // remove Apple
     $el
       .find('.ReactTags__remove')
       .at(0)
       .simulate('click');
-    //remove NewYork
+    // remove NewYork
     $el
       .find('.ReactTags__remove')
       .at(1)
@@ -379,13 +379,14 @@ describe('Test ReactTags', () => {
         });
       };
     });
+
     test('should render tags correctly', () => {
       const $el = mount(
         mockItem({
           tags: modifiedTags,
         })
       );
-      expect($el.instance().props.tags).to.have.members(modifiedTags);
+      expect($el.props().tags).to.have.members(modifiedTags);
     });
 
     test('allow adding tag which is not in the list', () => {
@@ -418,10 +419,11 @@ describe('Test ReactTags', () => {
       expect(actual).to.have.length(0);
     });
   });
+
   describe('autocomplete/suggestions filtering', () => {
     test('updates suggestions state as expected based on default filter logic', () => {
       const $el = mount(mockItem());
-      const ReactTagsInstance = $el.instance().getDecoratedComponentInstance();
+      const ReactTagsInstance = $el.find('ReactTags').instance();
       const $input = $el.find('.ReactTags__tagInputField');
 
       expect(ReactTagsInstance.state.suggestions).to.have.members(
@@ -456,7 +458,7 @@ describe('Test ReactTags', () => {
           },
         })
       );
-      const ReactTagsInstance = $el.instance().getDecoratedComponentInstance();
+      const ReactTagsInstance = $el.find('ReactTags').instance();
       const $input = $el.find('.ReactTags__tagInputField');
 
       expect(ReactTagsInstance.state.suggestions).to.have.members(
@@ -489,7 +491,7 @@ describe('Test ReactTags', () => {
           },
         })
       );
-      const ReactTagsInstance = $el.instance().getDecoratedComponentInstance();
+      const ReactTagsInstance = $el.find('ReactTags').instance();
       const $input = $el.find('.ReactTags__tagInputField');
 
       expect(ReactTagsInstance.state.suggestions).to.have.deep.members(
@@ -535,7 +537,7 @@ describe('Test ReactTags', () => {
     });
 
     test('handles addition when using default suggestions filter', () => {
-      let actual = [];
+      const actual = [];
       const $el = mount(
         mockItem({
           autocomplete: true,
@@ -553,11 +555,11 @@ describe('Test ReactTags', () => {
     });
     test('should add tag with custom label field and default suggestion filter', () => {
       const labelField = 'name';
-      const mapper = (data) => ({ id: data.id, name: data.text });
+      const mapper = data => ({ id: data.id, name: data.text });
       const tags = defaults.tags.map(mapper);
       const suggestions = defaults.suggestions.map(mapper);
 
-      let actual = [];
+      const actual = [];
       const $el = mount(
         mockItem({
           autocomplete: true,
@@ -577,8 +579,8 @@ describe('Test ReactTags', () => {
     });
     test('should select the correct suggestion using the keyboard when label is custom', () => {
       const labelField = 'name';
-      const mapper = (data) => ({ id: data.id, name: data.text });
-      let actual = [];
+      const mapper = data => ({ id: data.id, name: data.text });
+      const actual = [];
       const suggestions = defaults.suggestions.map(mapper);
 
       const $el = mount(
@@ -608,7 +610,7 @@ describe('Test ReactTags', () => {
 
 test('should render default tags with custom label field', () => {
   const labelField = 'name';
-  const mapper = (data) => ({ id: data.id, name: data.text });
+  const mapper = data => ({ id: data.id, name: data.text });
   const tags = defaults.tags.map(mapper);
   const suggestions = defaults.suggestions.map(mapper);
 
@@ -636,7 +638,7 @@ test('should allow duplicate tags when allowUnique is false', () => {
     })
   );
 
-  expect($el.instance().props.tags).to.have.deep.members(defaults.tags);
+  expect($el.props().tags).to.have.deep.members(defaults.tags);
   const $input = $el.find('.ReactTags__tagInputField');
   $input.simulate('change', { target: { value: 'Apple' } });
   $input.simulate('keyDown', { keyCode: ENTER_ARROW_KEY_CODE });

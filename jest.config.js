@@ -36,12 +36,12 @@ module.exports = {
 
   // An object that configures minimum threshold enforcement for coverage results
   coverageThreshold: {
-    './src/components/Tag.js': {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100,
-    },
+    // './src/components/Tag.js': {
+    //   branches: 100,
+    //   functions: 100,
+    //   lines: 100,
+    //   statements: 100,
+    // },
     './src/components/utils.js': {
       branches: 100,
       functions: 100,
@@ -129,7 +129,9 @@ module.exports = {
   // setupFiles: [],
 
   // The path to a module that runs some code to configure or set up the testing framework before each test
-  setupTestFrameworkScriptFile: '<rootDir>/__tests__/setupTest.js',
+  setupFilesAfterEnv: [
+    '<rootDir>/__tests__/setupTest.js'
+  ],
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],
@@ -171,7 +173,9 @@ module.exports = {
   // timers: "real",
 
   // A map from regular expressions to paths to transformers
-  // transform: null
+  transform: {
+    '.*': 'babel-jest'
+  },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   transformIgnorePatterns: ['/node_modules/'],

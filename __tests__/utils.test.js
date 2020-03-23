@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { expect } from 'chai';
 import noop from 'lodash/noop';
 
@@ -18,12 +19,13 @@ const KeyCodes = {
  * @param {string} input Input string to be split
  * @param {array<char>} delimiters Array of characters to build a regex for
  * @param {array<string>} expected resulting split of the input
+ * @returns {void}
  */
-function testRegex(input, delimiters, expected) {
+const testRegex = (input, delimiters, expected) => {
   const regex = buildRegExpFromDelimiters(delimiters);
   const result = input.split(regex);
   expect(result).to.deep.equal(expected);
-}
+};
 
 describe('Test buildRegExpFromDelimiters', () => {
   test('handles / delimiter', () => {

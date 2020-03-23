@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable */
 
 // List of countries in the world
 const Countries = [
@@ -273,11 +273,12 @@ class App extends React.Component {
   }
 
   handleTagClick(index) {
-    console.log('The tag at index ' + index + ' was clicked');
+    console.debug('The tag at index ' + index + ' was clicked');
   }
 
   render() {
     const { tags } = this.state;
+
     return (
       <div>
         <Tags
