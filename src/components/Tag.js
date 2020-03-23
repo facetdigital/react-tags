@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import PropTypes from 'prop-types';
 import ClassNames from 'classnames';
-import { canDrag, canDrop } from './utils';
 
+import { canDrag, canDrop } from './utils';
 import RemoveComponent from './RemoveComponent';
 
 const ItemTypes = { TAG: 'tag' };
@@ -22,14 +22,18 @@ const Tag = ({
 }) => {
   const label = tag[labelField];
   const { className = '' } = tag;
-
   const ref = useRef(null);
+
   const [{ isDragging }, drag] = useDrag({
-    item: { type: ItemTypes.TAG, id: tag.index, index: index },
+    item: {
+      type: ItemTypes.TAG,
+      id: tag.id,
+      index
+    },
     collect: monitor => ({
-      isDragging: monitor.isDragging(),
+      isDragging: monitor.isDragging()
     }),
-    canDrag: () => canDrag({ moveTag, readOnly, allowDragDrop }),
+    canDrag: () => canDrag({ moveTag, readOnly, allowDragDrop })
   });
 
   const [, drop] = useDrop({
@@ -64,7 +68,10 @@ const Tag = ({
 
       item.index = hoverIndex;
     },
-    canDrop: (props) => canDrop(props),
+    // eslint-disable-next-line no-unused-vars
+    canDrop: props => {
+      canDrop(props);
+    }
   });
 
   drag(drop(ref));
@@ -73,7 +80,10 @@ const Tag = ({
     <span
       ref={ref}
       className={ClassNames('tag-wrapper', classNames.tag, className)}
-      style={{opacity: isDragging ? 0 : 1, 'cursor': canDrag({ moveTag, readOnly, allowDragDrop }) ? 'move' : 'auto'}}
+      style={{
+        opacity: isDragging ? 0 : 1,
+        cursor: canDrag({ moveTag, readOnly, allowDragDrop }) ? 'move' : 'auto'
+      }}
       onClick={onTagClicked}
       onKeyDown={onTagClicked}
       onTouchStart={onTagClicked}
@@ -103,12 +113,12 @@ Tag.propTypes = {
   onTagClicked: PropTypes.func,
   classNames: PropTypes.object,
   readOnly: PropTypes.bool,
-  allowDragDrop: PropTypes.bool.isRequired,
+  allowDragDrop: PropTypes.bool.isRequired
 };
 
 Tag.defaultProps = {
   labelField: 'text',
-  readOnly: false,
+  readOnly: false
 };
 
 export default Tag;

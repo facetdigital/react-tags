@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+import ClassNames from 'classnames';
 import noop from 'lodash/noop';
 import uniq from 'lodash/uniq';
-import Suggestions from './Suggestions';
 import PropTypes from 'prop-types';
-import ClassNames from 'classnames';
 import memoizeOne from 'memoize-one';
-import Tag from './Tag';
 
-import { buildRegExpFromDelimiters } from './utils';
-
-//Constants
+// Constants
 import {
   KEYS,
   DEFAULT_PLACEHOLDER,
@@ -19,11 +15,16 @@ import {
   DEFAULT_LABEL_FIELD,
   INPUT_FIELD_POSITIONS,
 } from './constants';
+import Suggestions from './Suggestions';
+import Tag from './Tag';
+import { buildRegExpFromDelimiters } from './utils';
 
-const updateClassNames  = memoizeOne((classNames) =>
-{
+const updateClassNames  = memoizeOne(classNames => {
   return {
-    classNames : {...DEFAULT_CLASSNAMES,...classNames},
+    classNames: {
+      ...DEFAULT_CLASSNAMES,
+      ...classNames
+    },
   };
 });
 
@@ -110,6 +111,7 @@ class ReactTags extends Component {
       selectionMode: false,
       classNames: { ...DEFAULT_CLASSNAMES, ...classNames },
     };
+
     // TODO : remove classNames from state and change updateClassNames to instance function
     this.handleFocus = this.handleFocus.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
@@ -120,11 +122,9 @@ class ReactTags extends Component {
     this.resetAndFocusInput = this.resetAndFocusInput.bind(this);
     this.handleSuggestionHover = this.handleSuggestionHover.bind(this);
     this.handleSuggestionClick = this.handleSuggestionClick.bind(this);
-
   }
 
-  static getDerivedStateFromProps(props)
-  {
+  static getDerivedStateFromProps(props) {
     const { classNames } = props;
     return updateClassNames(classNames);
   }
@@ -141,12 +141,14 @@ class ReactTags extends Component {
       return this.props.handleFilterSuggestions(query, suggestions);
     }
 
-    const exactSuggestions = suggestions.filter((item) => {
+    const exactSuggestions = suggestions.filter(item => {
       return this.getQueryIndex(query, item) === 0;
     });
-    const partialSuggestions = suggestions.filter((item) => {
+
+    const partialSuggestions = suggestions.filter(item => {
       return this.getQueryIndex(query, item) > 0;
     });
+
     return exactSuggestions.concat(partialSuggestions);
   }
 
@@ -158,6 +160,7 @@ class ReactTags extends Component {
 
   resetAndFocusInput() {
     this.setState({ query: '' });
+
     if (this.textInput) {
       this.textInput.value = '';
       this.textInput.focus();
@@ -166,11 +169,14 @@ class ReactTags extends Component {
 
   handleDelete(i, e) {
     this.props.handleDelete(i, e);
+
     if (!this.props.resetInputOnDelete) {
       this.textInput && this.textInput.focus();
-    } else {
+    }
+    else {
       this.resetAndFocusInput();
     }
+
     e.stopPropagation();
   }
 
@@ -178,9 +184,11 @@ class ReactTags extends Component {
     if (this.props.handleTagClick) {
       this.props.handleTagClick(i, e);
     }
+
     if (!this.props.resetInputOnDelete) {
       this.textInput && this.textInput.focus();
-    } else {
+    }
+    else {
       this.resetAndFocusInput();
     }
   }
@@ -207,20 +215,25 @@ class ReactTags extends Component {
 
   handleFocus(e) {
     const value = e.target.value;
+
     if (this.props.handleInputFocus) {
       this.props.handleInputFocus(value);
     }
+
     this.setState({ isFocused: true });
   }
 
   handleBlur(e) {
     const value = e.target.value;
+
     if (this.props.handleInputBlur) {
       this.props.handleInputBlur(value);
+
       if (this.textInput) {
         this.textInput.value = '';
       }
     }
+
     this.setState({ isFocused: false });
   }
 
@@ -308,22 +321,25 @@ class ReactTags extends Component {
     const tags = pastedText.split(delimiterRegExp);
 
     // Only add unique tags
-    uniq(tags).forEach((tag) =>
+    uniq(tags).forEach(tag =>
       this.addTag({ id: tag, [this.props.labelField]: tag })
     );
   }
 
-  addTag = (tag) => {
+  addTag = tag => {
     const { tags, labelField, allowUnique } = this.props;
+
     if (!tag.id || !tag[labelField]) {
       return;
     }
-    const existingKeys = tags.map((tag) => tag.id.toLowerCase());
+
+    const existingKeys = tags.map(tagItem => tagItem.id.toLowerCase());
 
     // Return if tag has been already added
     if (allowUnique && existingKeys.indexOf(tag.id.toLowerCase()) >= 0) {
       return;
     }
+
     if (this.props.autocomplete) {
       const possibleMatches = this.filteredSuggestions(
         tag[labelField],
@@ -383,10 +399,11 @@ class ReactTags extends Component {
     } = this.props;
     const { classNames } = this.state;
     const moveTag = allowDragDrop ? this.moveTag : null;
+
     return tags.map((tag, index) => {
       return (
         <Tag
-          key={`${tag.id}-${index}`}
+          key={tag.id}
           index={index}
           tag={tag}
           labelField={labelField}
@@ -424,7 +441,7 @@ class ReactTags extends Component {
     const tagInput = !this.props.readOnly ? (
       <div className={this.state.classNames.tagInput}>
         <input
-          ref={(input) => {
+          ref={input => {
             this.textInput = input;
           }}
           className={this.state.classNames.tagInputField}
@@ -474,9 +491,9 @@ class ReactTags extends Component {
 module.exports = {
   WithContext: ({ ...props }) => (
     <DndProvider backend={HTML5Backend}>
-      <ReactTags {...props}/>
+      <ReactTags {...props} />
     </DndProvider>
   ),
   WithOutContext: ReactTags,
-  KEYS: KEYS,
+  KEYS: KEYS
 };

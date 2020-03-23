@@ -12,7 +12,8 @@ const maybeScrollSuggestionIntoView = (suggestionEl, suggestionsContainer) => {
   if (relativeSuggestionTop + suggestionHeight >= containerHeight) {
     suggestionsContainer.scrollTop +=
       relativeSuggestionTop - containerHeight + suggestionHeight;
-  } else if (relativeSuggestionTop < 0) {
+  }
+  else if (relativeSuggestionTop < 0) {
     suggestionsContainer.scrollTop += relativeSuggestionTop;
   }
 };
@@ -74,13 +75,13 @@ class Suggestions extends Component {
     const { [this.props.labelField]: labelValue } = input;
 
     return {
-      __html: labelValue.replace(RegExp(escapedRegex, 'gi'), (x) => {
+      __html: labelValue.replace(RegExp(escapedRegex, 'gi'), x => {
         return `<mark>${escape(x)}</mark>`;
       }),
     };
   };
 
-  shouldRenderSuggestions = (query) => {
+  shouldRenderSuggestions = query => {
     const { minQueryLength, isFocused } = this.props;
     return query.length >= minQueryLength && isFocused;
   };
@@ -96,22 +97,20 @@ class Suggestions extends Component {
   render() {
     const { props } = this;
 
-    const suggestions = props.suggestions.map(
-      function(item, i) {
-        return (
-          <li
-            key={i}
-            onMouseDown={props.handleClick.bind(null, i)}
-            onTouchStart={props.handleClick.bind(null, i)}
-            onMouseOver={props.handleHover.bind(null, i)}
-            className={
-              i === props.selectedIndex ? props.classNames.activeSuggestion : ''
-            }>
-            {this.renderSuggestion(item, props.query)}
-          </li>
-        );
-      }.bind(this)
-    );
+    const suggestions = props.suggestions.map((item, i) => {
+      return (
+        <li
+          key={i}
+          onMouseDown={props.handleClick.bind(null, i)}
+          onTouchStart={props.handleClick.bind(null, i)}
+          onMouseOver={props.handleHover.bind(null, i)}
+          className={
+            i === props.selectedIndex ? props.classNames.activeSuggestion : ''
+          }>
+          {this.renderSuggestion(item, props.query)}
+        </li>
+      );
+    });
 
     // use the override, if provided
     const shouldRenderSuggestions =
@@ -122,7 +121,7 @@ class Suggestions extends Component {
 
     return (
       <div
-        ref={(elem) => {
+        ref={elem => {
           this.suggestionsContainer = elem;
         }}
         className={this.props.classNames.suggestions}>
