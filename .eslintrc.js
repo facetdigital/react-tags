@@ -8,31 +8,135 @@ module.exports = {
   env: {
     es6: true,
     node: true,
-    browser: true
+    browser: true,
+    jest: true
   },
-  extends: ["eslint:recommended", "plugin:react/recommended"],
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   parserOptions: {
-    ecmaVersion: "6",
+    ecmaVersion: 6,
+    sourceType: "module",
     ecmaFeatures: {
-      jsx: true
-    },
-    sourceType: "module"
+      jsx: true,
+      experimentalObjectRestSpread: true
+    }
   },
-  plugins: ["react", "jsx-a11y"],
-  "parser": "babel-eslint",
+  plugins: [
+    "react",
+    "jsx-a11y"
+  ],
+  parser: "babel-eslint",
   rules: {
-    "indent": [2, 2],
-    "linebreak-style": [2, "unix"],
+     // Possible Errors
+    "computed-property-spacing": "off",
+    "no-cond-assign": "error",
+    "no-console": "off",
+    "no-constant-condition": "error",
+    "no-control-regex": "error",
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+    "no-dupe-keys": "error",
+    "no-empty": "error",
+    "no-empty-character-class": "error",
+    "no-ex-assign": "error",
+    "no-extra-boolean-cast": "error",
+    "no-extra-parens": "off",
+    "no-extra-semi": "error",
+    "no-func-assign": "error",
+    "no-inner-declarations": "error",
+    "no-invalid-regexp": "error",
+    "no-irregular-whitespace": "error",
+    "no-obj-calls": "error",
+    "no-regex-spaces": "error",
+    "no-reserved-keys": "off",
+    "no-sparse-arrays": "error",
+    "no-unreachable": "error",
+    "use-isnan": "error",
+    "valid-jsdoc": "warn",
+    "valid-typeof": "error",
+    // Variables
+    "prefer-const": "error",
+    "no-catch-shadow": "error",
+    "no-const-assign": "error",
+    "no-delete-var": "error",
+    "no-label-var": "error",
+    "no-shadow": "warn",
+    "no-shadow-restricted-names": "error",
+    "no-undef": "error",
+    "no-undef-init": "error",
+    "no-undefined": "error",
+    "no-unused-vars": "error",
+    "no-use-before-define": "error",
+    "no-var": "error",
+    // Stylistic Issues
+    "array-bracket-spacing": [
+      0,
+      "always",
+      {
+        "singleValue": false,
+        "objectsInArrays": false,
+        "arraysInArrays": false,
+      },
+    ],
+    "arrow-parens": [2, "as-needed"],
+    "arrow-spacing": "error",
+    "brace-style": ["error", "stroustrup"],
+    "camelcase": "error",
+    "comma-spacing": "error",
+    "comma-style": "error",
+    "consistent-this": [2, "that"],
+    "eol-last": "error",
+    "func-names": [2, "as-needed"],
+    "func-style": "off",
+    "keyword-spacing": "error",
+    "key-spacing": [
+      2,
+      {
+        "beforeColon": false,
+        "afterColon": true,
+      },
+    ],
+    "max-nested-callbacks": "off",
+    "new-cap": "off",
+    "new-parens": "error",
+    "no-array-constructor": "error",
+    "no-inline-comments": "off",
+    "no-lonely-if": "error",
+    "no-mixed-spaces-and-tabs": "error",
+    "no-nested-ternary": "error",
+    "no-new-object": "error",
+    "semi-spacing": [
+      2,
+      {
+        "before": false,
+        "after": true,
+      },
+    ],
+    "no-spaced-func": "error",
+    "no-ternary": "off",
+    "no-trailing-spaces": "error",
+    "no-multiple-empty-lines": "error",
+    "no-underscore-dangle": "off",
+    "object-curly-spacing": [2, "always"],
+    "one-var": "off",
+    "operator-assignment": [2, "always"],
+    "padded-blocks": "off",
     "quotes": [2, "single"],
+    "quote-props": [2, "as-needed"],
     "semi": [2, "always"],
-    "eqeqeq": [2, "smart"],
-    "no-unused-vars": 1,
-    "no-undef": 1,
-    "default-case": 1,
-    "comma-dangle": [2, "always-multiline"],
-    "no-trailing-spaces": 2,
-    "no-extra-bind": 1,
-    "no-useless-escape": 1,
+    "sort-vars": [
+      2,
+      {
+        "ignoreCase": true,
+      },
+    ],
+    "space-before-blocks": "error",
+    "space-in-parens": "error",
+    "space-infix-ops": "error",
+    "space-unary-ops": "error",
+    "spaced-comment": "error",
+    "wrap-regex": "off",
 
     /** react rules start here **/
 
@@ -68,9 +172,9 @@ module.exports = {
         "**/*.test.js"
       ],
       env: {
-        jest: true // now **/*.test.js files' env has both es6 *and* jest
+        jest: true // now **/*.test.js files" env has both es6 *and* jest
       },
-      // Can't extend in overrides: https://github.com/eslint/eslint/issues/8813
+      // Can"t extend in overrides: https://github.com/eslint/eslint/issues/8813
       // "extends": ["plugin:jest/recommended"]
       plugins: ["jest"],
       rules: {
